@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="Hello World!"
-        android:textColor="?android:attr/textColorSecondaryInverse"
+        android:textColor="#4c4c4c"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
