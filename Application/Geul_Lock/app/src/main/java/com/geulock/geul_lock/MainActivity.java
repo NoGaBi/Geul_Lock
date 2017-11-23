@@ -4,17 +4,20 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition( R.anim.startanim, R.anim.endanim );
+        overridePendingTransition( R.anim.startanim, R.anim.emptyanim );
         super.onCreate(savedInstanceState);
 
 
@@ -32,6 +35,14 @@ public class MainActivity extends AppCompatActivity {
         txt3.setTypeface(font);
         txt2.setPaintFlags(txt2.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
         txt3.setPaintFlags(txt3.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
+        final Animation animAlpha = AnimationUtils.loadAnimation(this,R.anim.alpha);
+
+        SystemClock.sleep(500);
+        txt1.startAnimation(animAlpha);
+        txt2.startAnimation(animAlpha);
+        txt3.startAnimation(animAlpha);
+
 
         ConstraintLayout background = (ConstraintLayout) findViewById(R.id.StartBackground);
 
