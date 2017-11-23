@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <alpha
+        android:duration="2000"
+        android:fromAlpha="0.4"
+        android:toAlpha="1.0" />
+
+    <scale
+        android:duration="2000"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="2.0"
+        android:toYScale="2.0" />
+
+    <scale
+        android:duration="2000"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="2500"
+        android:toXScale="0.5"
+        android:toYScale="0.5" />
+
+    <rotate
+        android:duration="2000"
+        android:fromDegrees="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toDegrees="360" />
+
+</set>
+
+    <!--  android:shareInterpolator="false" : 하위 애니메이션에 각각 다른 interpolator를 적용할때 씁니다  -->
+
+    <!--  출처: http://itmir.tistory.com/515 [미르의 IT 정복기]  -->
