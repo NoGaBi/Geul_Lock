@@ -8,10 +8,11 @@ import android.widget.Button;
 
 public class Main2Activity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //overridePendingTransition( R.anim.slideanim, R.anim.endanim );
+        overridePendingTransition( R.anim.slideinanim, R.anim.endanim );
         setContentView(R.layout.activity_main2);
 
         Button send_btn = (Button) findViewById(R.id.send_btn);
