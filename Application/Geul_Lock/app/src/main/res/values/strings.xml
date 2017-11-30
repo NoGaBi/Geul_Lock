@@ -2,4 +2,7 @@
     <string name="app_name">Geul_Lock</string>
     <string name="enterHashtag">Enter keywords with HashTag(#).</string>
     <string name="send">Send</string>
+    <string name="app_name_kr">글락</string>
+    <string name="r_u_happy">지금, 행복하신가요?</string>
+    <string name="touch_for_next">넘기려면 터치하세요</string>
 </resources>
