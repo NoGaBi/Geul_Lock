@@ -46,11 +46,11 @@
 
         <EditText
             android:id="@+id/editText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="top|left"
-            android:hint="Enter keywords with HashTag(#)."
+            android:gravity="top|start"
+            android:hint="@string/enterHashtag"
             tools:layout_editor_absoluteX="35dp"
             tools:layout_editor_absoluteY="8dp" />
 
@@ -59,7 +59,7 @@
             android:layout_width="72dp"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
-            android:text="Send"
+            android:text="@string/send"
             android:textSize="16sp"
             tools:layout_editor_absoluteX="269dp"
             tools:layout_editor_absoluteY="8dp" />

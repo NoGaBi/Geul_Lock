@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Geul_Lock</string>
+    <string name="enterHashtag">Enter keywords with HashTag(#).</string>
+    <string name="send">Send</string>
 </resources>
