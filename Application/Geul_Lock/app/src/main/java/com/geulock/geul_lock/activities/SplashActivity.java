@@ -1,4 +1,4 @@
-package com.geulock.geul_lock;
+package com.geulock.geul_lock.activities;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -13,7 +13,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.geulock.geul_lock.Fonts;
+import com.geulock.geul_lock.R;
+
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +25,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_splash);
 
         TextView txt1 = (TextView) findViewById(R.id.textView);
         TextView txt2 = (TextView) findViewById(R.id.textView2);
         TextView txt3 = (TextView) findViewById(R.id.textView3);
-        Typeface font = Typeface.createFromAsset(getAssets(), "MN.TTF");
-        txt1.setTypeface(font);
-        txt2.setTypeface(font);
-        txt3.setTypeface(font);
+
+        txt1.setTypeface(Fonts.getMn(this));
+        txt2.setTypeface(Fonts.getMn(this));
+        txt3.setTypeface(Fonts.getMn(this));
+
         txt2.setPaintFlags(txt2.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
         txt3.setPaintFlags(txt3.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity( intent );
                 overridePendingTransition( R.anim.slideinanim, R.anim.slideoutanim );
                 finish();
