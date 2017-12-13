@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="start"
     android:gravity="start"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/message_left"
-        android:maxWidth="269dp"
-        android:text="ExampleText 0123456789012345678901234567890123456789"
+        android:ellipsize="end"
+        android:maxLines="10"
+        android:maxWidth="270dp"
+        android:text="ExampleText 01234567890123456789qwdqwfgregteqfrtyrewf012345678901234567891244y534t3rqwfnm,iyluk56r5yerwgdvbgfnth"
         android:textColor="#FFAAAAAA"
         android:textSize="20sp" />
 </LinearLayout>
