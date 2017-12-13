@@ -14,5 +14,6 @@
         android:background="@drawable/message_left"
         android:maxWidth="269dp"
         android:text="ExampleText 0123456789012345678901234567890123456789"
+        android:textColor="#FFAAAAAA"
         android:textSize="20sp" />
 </LinearLayout>
