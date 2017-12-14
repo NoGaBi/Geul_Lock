@@ -2,9 +2,11 @@ package com.geulock.geul_lock.data;
 
 import java.util.ArrayList;
 
-/**
- * Created by sihwan on 2017. 12. 13..
- */
+/** * * * * * * * * * * * * * * * * * * * * * * * * * * **
+ ** * * Created by sihwan on 2017. 12. 13..         * * **
+ **                                                 * * **
+ ** * * WARNING: 이 클래스는 현재 사용되지 않고 있습니다.     * * **
+ ** * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 
 public class SearchHistoriesPrev {
     private static ArrayList<String> messageList;

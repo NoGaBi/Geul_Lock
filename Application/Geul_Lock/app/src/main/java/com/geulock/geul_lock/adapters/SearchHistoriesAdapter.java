@@ -1,6 +1,5 @@
 package com.geulock.geul_lock.adapters;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.geulock.geul_lock.R;
-import com.geulock.geul_lock.data.SearchHistoriesPrev;
 import com.geulock.geul_lock.data.SearchHistory;
 
 import java.util.HashSet;
@@ -28,6 +26,8 @@ public class SearchHistoriesAdapter extends RealmRecyclerViewAdapter<SearchHisto
     public SearchHistoriesAdapter(@Nullable OrderedRealmCollection<SearchHistory> data) {
         super(data, true);
 
+        // RecyclerView 의 성능을 올려주는 기능. 사용 제약 있음.
+        // TODO: 이 메소드의 역할을 정확히 알아보기.
         setHasStableIds(true);
     }
 
@@ -52,6 +52,9 @@ public class SearchHistoriesAdapter extends RealmRecyclerViewAdapter<SearchHisto
         holder.tvMessage.setText(obj.getMessage());
     }
 
+    /*
+     * 특정 position 의 id (Primary Key) 값을 얻어오는 메소드입니다.
+     */
     @Override
     public long getItemId(int position) {
         return getItem(position).getId();
