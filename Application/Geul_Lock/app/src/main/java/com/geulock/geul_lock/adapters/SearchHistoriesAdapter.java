@@ -27,7 +27,7 @@ public class SearchHistoriesAdapter extends RealmRecyclerViewAdapter<SearchHisto
         super(data, true);
 
         // RecyclerView 의 성능을 올려주는 기능. 사용 제약 있음.
-        // TODO: 이 메소드의 역할을 정확히 알아보기.
+        // TODO: setHasStableIds 메소드의 역할을 정확히 알아보기.
         setHasStableIds(true);
     }
 

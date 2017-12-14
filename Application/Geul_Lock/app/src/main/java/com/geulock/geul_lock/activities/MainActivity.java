@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //--------------------------- 초기화 ----------------------------//
 
         btnSend = (Button) findViewById( R.id.btn_send );
+        // TODO: etTag 가 입력 모드일 때 send 한 것이 안보이는 문제를 해결해야함.
         etTag = (EditText) findViewById( R.id.et_tag);
         rcvSearchHistories = (RecyclerView) findViewById(R.id.rcv_search_histories);
         lm = new LinearLayoutManager(this);
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /*
         * RecyclerView 에서 아이템을 움직일 때 drag&drop을 허용해주기 위함 이라고 하는데 아직 파악이 덜 됐습니다.
-        * TODO: 이 메소드가 무엇인지 파악해야합니다.
+        * TODO: onMove 메소드가 무엇인지 파악해야합니다.
         */
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
