@@ -27,6 +27,10 @@ public class SearchHistory extends RealmObject {
         return INTEGER_COUNTER.getAndIncrement();
     }
 
+    public static void setIntegerCounter(int value) {
+        INTEGER_COUNTER.set(value);
+    }
+
     public int getId() {
         return id;
     }
@@ -50,9 +54,9 @@ public class SearchHistory extends RealmObject {
     public static void create(Realm realm, String message) {
         SearchHistories shs = realm.where(SearchHistories.class).findFirst();
         RealmList<SearchHistory> shList = shs.getShList();
-        SearchHistory counter = realm.createObject(SearchHistory.class, increment());
-        counter.setMessage(message);
-        shList.add(counter);
+        SearchHistory item = realm.createObject(SearchHistory.class, increment());
+        item.setMessage(message);
+        shList.add(item);
     }
 
     public static void delete(Realm realm, long id) {

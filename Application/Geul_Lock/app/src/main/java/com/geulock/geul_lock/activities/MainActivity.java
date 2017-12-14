@@ -15,6 +15,7 @@ import com.geulock.geul_lock.Fonts;
 import com.geulock.geul_lock.R;
 import com.geulock.geul_lock.adapters.SearchHistoriesAdapter;
 import com.geulock.geul_lock.data.SearchHistories;
+import com.geulock.geul_lock.data.SearchHistory;
 import com.geulock.geul_lock.data.ShHelper;
 
 import io.realm.Realm;
@@ -47,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rcvSearchHistories = (RecyclerView) findViewById(R.id.rcv_search_histories);
         lm = new LinearLayoutManager(this);
         realm = Realm.getDefaultInstance();
+        // SearchHistory (아이템) 의 개수가 1개 이상일 경우, 아이템 카운팅을 id의 맥스 수치로 설정.
+        // TODO: id 값이 증가하고 증가해서 java 가 설정한 int의 맥스 수치를 찍었을 때 모든 id 값을 리셋하는 코드를 만들어야함.
+        if(realm.where(SearchHistory.class).count() > 0)
+            SearchHistory.setIntegerCounter(realm.where(SearchHistory.class).max("id").intValue() + 1);
 
         //--------------------------- 기능 부여 ----------------------------//
 
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 태그 검색 버튼 클릭 시
             case R.id.btn_send:
                 ShHelper.addItemAsync(realm, etTag.getText().toString());
+                monitorIds();
                 break;
         }
     }
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             ShHelper.deleteItemAsync(realm, viewHolder.getItemId());
+            monitorIds();
         }
 
         /*
@@ -122,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setUpRecyclerView() {
         // 어댑터 초기화
         adtSearchHistories = new SearchHistoriesAdapter(realm.where(SearchHistories.class).findFirst().getShList());
-        Log.d("tag", realm.where(SearchHistories.class).count() + "");
         // RecyclerView 어댑터 설정
         rcvSearchHistories.setAdapter(adtSearchHistories);
         // RecyclerView 레이아웃매니저 설정 (마지막 아이템을 먼저 보이도록)
@@ -137,4 +143,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         touchHelper.attachToRecyclerView(rcvSearchHistories);
     }
 
+    /*
+     * 아이디 값을 로그로 찍어줍니다.
+     * 이는 앱 재시작 시 아이디 값의 잘못된 설정으로 인해 오류가 나던 것을 수정하기 위해 쓰였습니다.
+     */
+    private void monitorIds() {
+        int size = realm.where(SearchHistories.class).findFirst().getShList().size();
+
+        Log.d("tag", "------------------------------------------------");
+        for (int i = 0; i < size; i++) {
+            Log.d("tag", "index: i , key: " + realm.where(SearchHistories.class).findFirst().getShList().get(i).getId());
+        }
+        Log.d("tag", "------------------------------------------------");
+    }
 }
