@@ -18,5 +18,6 @@
         android:maxWidth="270dp"
         android:text="ExampleText 01234567890123456789qwdqwfgregteqfrtyrewf012345678901234567891244y534t3rqwfnm,iyluk56r5yerwgdvbgfnth"
         android:textColor="#FFAAAAAA"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"/>
 </LinearLayout>
