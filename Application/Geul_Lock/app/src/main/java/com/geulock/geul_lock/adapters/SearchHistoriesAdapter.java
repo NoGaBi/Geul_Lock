@@ -10,9 +10,6 @@ import android.widget.TextView;
 import com.geulock.geul_lock.R;
 import com.geulock.geul_lock.data.SearchHistory;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
 
