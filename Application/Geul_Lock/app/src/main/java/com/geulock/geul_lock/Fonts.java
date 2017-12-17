@@ -8,7 +8,7 @@ import android.graphics.Typeface;
  */
 
 public class Fonts {
-    public static Typeface bradhitc, mn;
+    private static Typeface bradhitc, mn;
 
     public static Typeface getBradhitc(Context context) {
         if (bradhitc == null)

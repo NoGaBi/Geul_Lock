@@ -16,8 +16,8 @@
         android:ellipsize="end"
         android:maxLines="10"
         android:maxWidth="270dp"
-        android:text="ExampleText 01234567890123456789qwdqwfgregteqfrtyrewf012345678901234567891244y534t3rqwfnm,iyluk56r5yerwgdvbgfnth"
-        android:textColor="#FF000000"
+        android:text="@string/dummy_text_long"
+        android:textColor="@color/colorBlack"
         android:textSize="20sp"
         android:layout_marginBottom="10dp"/>
 </LinearLayout>
