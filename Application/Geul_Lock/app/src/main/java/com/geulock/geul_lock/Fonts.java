@@ -8,7 +8,7 @@ import android.graphics.Typeface;
  */
 
 public class Fonts {
-    private static Typeface bradhitc, mn;
+    private static Typeface bradhitc, mn, sd;
 
     public static Typeface getBradhitc(Context context) {
         if (bradhitc == null)
@@ -20,5 +20,11 @@ public class Fonts {
         if (mn == null)
             mn = Typeface.createFromAsset(context.getAssets(), "MN.TTF");
         return mn;
+    }
+
+    public  static Typeface getSDMiSaeng(Context context) {
+        if(sd == null)
+            sd = Typeface.createFromAsset(context.getAssets(), "SDMiSaeng.TTF");
+        return sd;
     }
 }

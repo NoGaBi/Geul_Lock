@@ -1,26 +1,37 @@
 package com.geulock.geul_lock.activities;
 
+import android.app.Service;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.geulock.geul_lock.Fonts;
 import com.geulock.geul_lock.R;
+import com.geulock.geul_lock.adapters.LinearLayoutManagerWithSmoothScroller;
 import com.geulock.geul_lock.adapters.SearchHistoriesAdapter;
 import com.geulock.geul_lock.data.SearchHistories;
 import com.geulock.geul_lock.data.SearchHistory;
 import com.geulock.geul_lock.data.ShHelper;
+import com.geulock.geul_lock.softKeyboard.SoftKeyboard;
 
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+
 
     // Views
     private Button btnSend;     // 태그를 검색.
@@ -44,11 +55,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //--------------------------- 초기화 ----------------------------//
 
         btnSend = (Button) findViewById( R.id.btn_send );
-        // TODO: etTag 가 입력 모드일 때 send 한 것이 안보이는 문제를 해결해야함.
+
+        //TODO: MySQL 이랑 연결시켜야함.
         etTag = (EditText) findViewById( R.id.et_tag);
         rcvSearchHistories = (RecyclerView) findViewById(R.id.rcv_search_histories);
-        lm = new LinearLayoutManager(this);
+        lm = new LinearLayoutManagerWithSmoothScroller(this);
         realm = Realm.getDefaultInstance();
+
         // SearchHistory (아이템) 의 개수가 1개 이상일 경우, 아이템 카운팅을 id의 맥스 수치로 설정.
         // TODO: id 값이 증가하고 증가해서 java 가 설정한 int의 맥스 수치를 찍었을 때 모든 id 값을 리셋하는 코드를 만들어야함.
         if(realm.where(SearchHistory.class).count() > 0)
@@ -58,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 폰트 설정
         btnSend.setTypeface(Fonts.getBradhitc(this));
-        etTag.setTypeface(Fonts.getMn(this));
+        etTag.setTypeface(Fonts.getSDMiSaeng(this));
+
         // 텍스트 굵게 설정
         btnSend.setPaintFlags(btnSend.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
         // 클릭 리스너
@@ -80,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 태그 검색 버튼 클릭 시
             case R.id.btn_send:
                 ShHelper.addItemAsync(realm, etTag.getText().toString());
+                //새 항목 추가시 스크롤 맨 아래로 내려주는 기능
+                rcvSearchHistories.getLayoutManager().smoothScrollToPosition(rcvSearchHistories,new RecyclerView.State(), rcvSearchHistories.getAdapter().getItemCount());
+
+                etTag.setText("");
                 monitorIds();
                 break;
         }
@@ -135,8 +153,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // RecyclerView 레이아웃매니저 설정 (마지막 아이템을 먼저 보이도록)
         lm.setStackFromEnd(true);
         rcvSearchHistories.setLayoutManager(lm);
+
+
+
+
         // RecyclerView 화면 크기 고정 설정
-        rcvSearchHistories.setHasFixedSize(true);
+        rcvSearchHistories.setHasFixedSize(false);
 
         // TouchHelper 를 설정
         TouchHelperCallback touchHelperCallback = new TouchHelperCallback();
@@ -157,4 +179,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         Log.d("tag", "------------------------------------------------");
     }
+
+
 }

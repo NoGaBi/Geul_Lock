@@ -2,11 +2,13 @@ package com.geulock.geul_lock.adapters;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.geulock.geul_lock.Fonts;
 import com.geulock.geul_lock.R;
 import com.geulock.geul_lock.data.SearchHistory;
 
@@ -39,7 +41,10 @@ public class SearchHistoriesAdapter extends RealmRecyclerViewAdapter<SearchHisto
 
     @Override
     public ItemVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_history, parent, false));
+        ItemVH object = new ItemVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_history, parent, false));
+        // 메세지 폰트 설정
+        object.tvMessage.setTypeface(Fonts.getSDMiSaeng(object.tvMessage.getContext()));
+        return object;
     }
 
     @Override
