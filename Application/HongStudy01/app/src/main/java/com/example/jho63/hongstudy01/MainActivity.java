@@ -1,5 +1,6 @@
 package com.example.jho63.hongstudy01;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
             switch (view.getId()){
                 case R.id.button :
                     textView.setText(editText.getText().toString().trim());
+                    Intent i = new Intent(MainActivity.this, ShowText.class);
+                    i.putExtra("value", editText.getText().toString().trim());
+                    startActivity(i);
                     break;
             }
         }
