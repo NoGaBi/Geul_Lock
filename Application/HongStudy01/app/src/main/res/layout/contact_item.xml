@@ -10,31 +10,34 @@
         android:layout_height="48dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/contact_ProfileImg"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:background="none"
+            android:padding="5dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/profile_default" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/contace_Name"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/contact_CallBtn"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:background="none"
+            android:contentDescription="TODO"
+            android:padding="5dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/phoneCall_btn" />
+            app:srcCompat="@drawable/phonecall_btn" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/contact_MsgBtn"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:background="none"
+            android:contentDescription="TODO"
+            android:padding="5dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/message_btn" />
 
