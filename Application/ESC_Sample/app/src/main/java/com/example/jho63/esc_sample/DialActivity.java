@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class DialActivity extends AppCompatActivity {
 
     TextView EnterdNum;
     Button btn[];
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_dial);
 
         btn= new Button[10];
         for(int i = 0; i < 10; i++){
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else {
                     /**더이상 지울 게 없을 경우 알림을 띄웁니다.*/
-                    Toast.makeText(MainActivity.this, "There is no Element to Delete!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DialActivity.this, "There is no Element to Delete!", Toast.LENGTH_SHORT).show();
                 }
                 EnterdNum.setText(changeToDialFormat(prevText));
             }
@@ -133,6 +133,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn_Contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btn_Add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 }
