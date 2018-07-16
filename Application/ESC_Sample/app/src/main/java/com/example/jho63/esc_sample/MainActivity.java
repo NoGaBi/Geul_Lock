@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 01098908717 과 같이 입력되는 형태를 010-9890-8717 로 입력되게 해주는 함수.
      * +, #, * 이 들어가는 경우 - 없애주는 기능 또한 함.
-     * 간단한 방법으로 구현했으니 한번 봐보시면 좋습니다.
+     * 간단하면서도 간단하지 않은 방법으로 구현했으니 한번 봐보시면 좋습니다.
      * 참고) setText(문자열 값), getText(문자열 값) 함수는 TextView 객체 내부에 정의되어있는 텍스트 설정, 텍스트 가져오기 함수입니다.
      */
     public String changeToDialFormat(String rawStr) {
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }else {
+                    /**더이상 지울 게 없을 경우 알림을 띄웁니다.*/
                     Toast.makeText(MainActivity.this, "There is no Element to Delete!", Toast.LENGTH_SHORT).show();
                 }
                 EnterdNum.setText(changeToDialFormat(prevText));
