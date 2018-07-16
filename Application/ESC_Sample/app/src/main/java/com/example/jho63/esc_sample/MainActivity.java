@@ -3,6 +3,7 @@ package com.example.jho63.esc_sample;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -29,6 +30,28 @@ public class MainActivity extends AppCompatActivity {
             return ResourceID;
         }
     }
+    /**
+     * 01098908717 과 같이 입력되는 형태를 010-9890-8717 로 입력되게 해주는 함수.
+     * +, #, * 이 들어가는 경우 - 없애주는 기능 또한 함.
+     * 간단한 방법으로 구현했으니 한번 봐보시면 좋습니다.
+     * 참고) setText(문자열 값), getText(문자열 값) 함수는 TextView 객체 내부에 정의되어있는 텍스트 설정, 텍스트 가져오기 함수입니다.
+     */
+    public String changeToDialFormat(String rawStr) {
+
+        if(rawStr.contains("*") || rawStr.contains("#") || rawStr.startsWith("+")){
+            rawStr.replaceAll("-", "");
+        }
+        else{
+            if(rawStr.length() >= 4 && rawStr.charAt(4) != '-') {
+                return rawStr.substring(0, 3) + "-" + rawStr.substring(3);
+            }
+            if(rawStr.length() >= 9 && rawStr.charAt(8) != '-') {
+                return rawStr.substring(0, 8) + "-" + rawStr.substring(8);
+            }
+        }
+
+        return rawStr;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +70,33 @@ public class MainActivity extends AppCompatActivity {
         btn_Plus = (Button) findViewById(R.id.btnPlus);
         btn_Star = (Button) findViewById(R.id.btnStar);
 
-        
+        EnterdNum = (TextView) findViewById(R.id.EnteredNum);
+        EnterdNum.setText("");
+
+        for(int i = 0; i < 10; i++){
+            final int finalI = i;
+            btn[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EnterdNum.setText(changeToDialFormat(EnterdNum.getText().toString() + finalI));
+                }
+            });
+        }
+
+        btn_Del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String prevText = EnterdNum.getText().toString();
+                prevText = prevText.substring(0, prevText.length()-1);
+
+                if(prevText.substring(prevText.length()-1).equals("-")){
+                    prevText = prevText.substring(0, prevText.length()-1);
+                }
+
+                EnterdNum.setText(prevText);
+            }
+        });
+
 
     }
 }
