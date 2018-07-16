@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,15 +39,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public String changeToDialFormat(String rawStr) {
 
-        if(rawStr.contains("*") || rawStr.contains("#") || rawStr.startsWith("+")){
-            rawStr.replaceAll("-", "");
+        while(rawStr.contains("-")){
+            rawStr = rawStr.substring(0,rawStr.indexOf("-")) + rawStr.substring(rawStr.indexOf("-")+1);
         }
-        else{
-            if(rawStr.length() >= 4 && rawStr.charAt(4) != '-') {
-                return rawStr.substring(0, 3) + "-" + rawStr.substring(3);
+
+        if( !(rawStr.contains("*") || rawStr.contains("#") || rawStr.startsWith("+") || rawStr.length() > 11) ){
+            if(rawStr.length() >= 4 && rawStr.charAt(3) != '-') {
+                rawStr = rawStr.substring(0, 3) + "-" + rawStr.substring(3);
             }
             if(rawStr.length() >= 9 && rawStr.charAt(8) != '-') {
-                return rawStr.substring(0, 8) + "-" + rawStr.substring(8);
+                rawStr = rawStr.substring(0, 8) + "-" + rawStr.substring(8);
             }
         }
 
@@ -83,17 +85,50 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        btn_Plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnterdNum.setText(changeToDialFormat(EnterdNum.getText().toString() + "+"));
+            }
+        });
+
+        btn_Sharp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnterdNum.setText(changeToDialFormat(EnterdNum.getText().toString() + "#"));
+            }
+        });
+
+        btn_Star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnterdNum.setText(changeToDialFormat(EnterdNum.getText().toString() + "*"));
+            }
+        });
+
         btn_Del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String prevText = EnterdNum.getText().toString();
-                prevText = prevText.substring(0, prevText.length()-1);
+                if(prevText.length() > 0) {
+                    prevText = prevText.substring(0, prevText.length() - 1);
 
-                if(prevText.substring(prevText.length()-1).equals("-")){
-                    prevText = prevText.substring(0, prevText.length()-1);
+                    if (prevText.length() >= 1) {
+                        if (prevText.substring(prevText.length() - 1).equals("-")) {
+                            prevText = prevText.substring(0, prevText.length() - 1);
+                        }
+                    }
+                }else {
+                    Toast.makeText(MainActivity.this, "There is no Element to Delete!", Toast.LENGTH_SHORT).show();
                 }
+                EnterdNum.setText(changeToDialFormat(prevText));
+            }
+        });
 
-                EnterdNum.setText(prevText);
+        btn_Call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
