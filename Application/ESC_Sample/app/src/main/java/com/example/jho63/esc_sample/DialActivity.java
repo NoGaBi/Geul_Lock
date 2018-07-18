@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,8 @@ public class DialActivity extends AppCompatActivity {
     TextView enterdNum;
     Button btn[];
     Button btn_Del, btn_Call, btn_Add, btn_Contact, btn_Sharp, btn_Plus, btn_Star;
+
+    static final String KEY_OF_TEL = "SAVED_TEL";
 
     /**
      * 배열로 버튼을 이어주기 위해 필요한, string 으로 입력된 리소스아이디명을 id값으로 바꿔주는 함수.
@@ -67,6 +70,10 @@ public class DialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dial);
 
+        Intent intentOfThis = new Intent(this.getIntent());
+        intentOfThis.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
         btn = new Button[10];
         for (int i = 0; i < 10; i++) {
             btn[i] = (Button) findViewById(getResourceID("btn" + i, "id", this));
@@ -80,8 +87,13 @@ public class DialActivity extends AppCompatActivity {
         btn_Star = (Button) findViewById(R.id.btnStar);
 
         enterdNum = (TextView) findViewById(R.id.EnteredNum);
-        enterdNum.setText("");
 
+        if(savedInstanceState != null) { //이전에 저장해둔 상태가 있을경우 입력했던 번호를 불러와줌.
+            String data = savedInstanceState.getString(KEY_OF_TEL);
+            enterdNum.setText(data);
+        }else {
+            enterdNum.setText("");
+        }
         for (int i = 0; i < 10; i++) {
             final int finalI = i;
             btn[i].setOnClickListener(new View.OnClickListener() {
@@ -202,14 +214,18 @@ public class DialActivity extends AppCompatActivity {
         btn_Contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO: intent 생성해서 ContactActivity로 넘기기
             }
         });
 
         btn_Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(DialActivity.this, AddProfileActivity.class);
+                //intent에 전화번호를 담아서 AddProfileActivity로 전달
+                intent.putExtra("tel",enterdNum.getText());
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
             }
         });
     }
@@ -229,6 +245,7 @@ public class DialActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
+            //전달된 requestCode가 1000일 경우(임의로 지정 가능)
             case 1000: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -241,8 +258,13 @@ public class DialActivity extends AppCompatActivity {
                 }
                 return;
             }
-            // 예외 케이스
         }
     }
 
+    //이전에 입력해둔 데이터 저장. 화면 회전등의 상황에서도 데이터 유지를 위함.
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_OF_TEL, enterdNum.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
 }
