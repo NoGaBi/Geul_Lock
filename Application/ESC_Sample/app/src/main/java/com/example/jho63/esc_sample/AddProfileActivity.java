@@ -60,6 +60,8 @@ public class AddProfileActivity extends AppCompatActivity {
                 String entered_tel = phoneNum.getText().toString();
                 String entered_name = nameInputLayout.getEditText().getText().toString();
                 //TODO: 데이터베이스 구축하던지 아니면 샘플 객체 만들어서 데이터 저장.
+
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
