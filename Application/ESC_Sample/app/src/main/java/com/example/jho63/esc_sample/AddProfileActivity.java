@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.example.jho63.esc_sample.SampleDataClass.DummyData;
+import com.example.jho63.esc_sample.SampleDataClass.Profile;
+
 public class AddProfileActivity extends AppCompatActivity {
 
     EditText phoneNum, email;
@@ -61,6 +64,11 @@ public class AddProfileActivity extends AppCompatActivity {
                 String entered_name = nameInputLayout.getEditText().getText().toString();
                 //TODO: 데이터베이스 구축하던지 아니면 샘플 객체 만들어서 데이터 저장.
 
+                Profile profile = new Profile
+                        .Builder(entered_name, entered_tel, entered_email)
+                        .build();
+
+                DummyData.dummyList.add(profile);
                 finish();
             default:
                 return super.onOptionsItemSelected(item);

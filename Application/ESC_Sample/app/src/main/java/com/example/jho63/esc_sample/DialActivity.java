@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jho63.esc_sample.SampleDataClass.DummyData;
+
 public class DialActivity extends AppCompatActivity {
 
     TextView enterdNum;
@@ -214,7 +216,12 @@ public class DialActivity extends AppCompatActivity {
         btn_Contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: intent 생성해서 ContactActivity로 넘기기
+                if(DummyData.dummyList.size() == 0) {
+                    Toast.makeText(DialActivity.this,"There is no Profile to Show in ContactList",Toast.LENGTH_LONG).show();
+                }else {
+                    //TODO: intent 생성해서 ContactActivity로 넘기기
+                }
+
             }
         });
 
