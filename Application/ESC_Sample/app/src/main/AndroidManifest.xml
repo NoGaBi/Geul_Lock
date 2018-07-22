@@ -15,6 +15,7 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,6 +32,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DialActivity" />
+        </activity>
+        <activity
+            android:name=".SampleDataClass.EditActivity"
+            android:theme="@style/AppTheme2">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ContactActivity" />
         </activity>
     </application>
 

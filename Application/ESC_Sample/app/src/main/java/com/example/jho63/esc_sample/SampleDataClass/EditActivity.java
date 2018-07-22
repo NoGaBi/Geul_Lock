@@ -1,6 +1,5 @@
-package com.example.jho63.esc_sample;
+package com.example.jho63.esc_sample.SampleDataClass;
 
-import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,14 +7,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import com.example.jho63.esc_sample.SampleDataClass.DummyData;
-import com.example.jho63.esc_sample.SampleDataClass.Profile;
+import com.example.jho63.esc_sample.R;
 
-public class AddProfileActivity extends AppCompatActivity {
 
-    EditText phoneNum, email;
-    TextInputLayout nameInputLayout;
+public class EditActivity extends AppCompatActivity {
+
+    TextInputLayout Edit_NameInputLayout;
+    EditText PhoneNum, E_Mail;
+    ImageView ProfileImg;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -26,7 +27,7 @@ public class AddProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_profile);
+        setContentView(R.layout.activity_edit);
 
         //actionBar 객체를 가져올 수 있다.
         ActionBar actionBar = getSupportActionBar();
@@ -36,17 +37,16 @@ public class AddProfileActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         //메뉴바에 타이틀 지정
-        actionBar.setTitle("Add Profile");
+        actionBar.setTitle("Edit Profile");
 
-        //intent안에 담아서 전달한 전화번호를 가져온다.
-        Intent intentOfThis = new Intent(this.getIntent());
-        String tel = intentOfThis.getStringExtra("tel");
+        Edit_NameInputLayout = (TextInputLayout)findViewById(R.id.Edit_NameInputLayout);
+        PhoneNum = (EditText)findViewById(R.id.Edit_phoneNum);
+        E_Mail = (EditText)findViewById(R.id.Edit_email);
+        ProfileImg = (ImageView)findViewById(R.id.Edit_Img);
 
-        phoneNum = (EditText) findViewById(R.id.Contact_phoneNum);
-        phoneNum.setText( tel );
-
-        email = (EditText) findViewById(R.id.add_email);
-        nameInputLayout = (TextInputLayout) findViewById(R.id.NameInputLayout);
+        Edit_NameInputLayout.getEditText().setText(DummyData.dummyList.get(DummyData.getPage()).getName());
+        PhoneNum.setText(DummyData.dummyList.get(DummyData.getPage()).getPhoneNum());
+        E_Mail.setText(DummyData.dummyList.get(DummyData.getPage()).getE_Mail());
     }
 
     //액션바 아이템 선택시 각각 수행할 작업에 대한 함수.
@@ -58,15 +58,16 @@ public class AddProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.saveData:
-                String entered_email = email.getText().toString();
-                String entered_tel = phoneNum.getText().toString();
-                String entered_name = nameInputLayout.getEditText().getText().toString();
+                String entered_email = E_Mail.getText().toString();
+                String entered_tel = PhoneNum.getText().toString();
+                String entered_name = Edit_NameInputLayout.getEditText().getText().toString();
 
-                Profile profile = new Profile(entered_name, entered_tel, entered_email);
+                DummyData.dummyList.get(DummyData.getPage()).setName(entered_name);
+                DummyData.dummyList.get(DummyData.getPage()).setPhoneNum(entered_tel);
+                DummyData.dummyList.get(DummyData.getPage()).setE_Mail(entered_email);
 
                 //TODO: 이미지 설정 기능 추가
 
-                DummyData.dummyList.add(profile);
                 finish();
             default:
                 return super.onOptionsItemSelected(item);

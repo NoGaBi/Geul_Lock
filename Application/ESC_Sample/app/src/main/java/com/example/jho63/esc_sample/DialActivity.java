@@ -90,10 +90,10 @@ public class DialActivity extends AppCompatActivity {
 
         enterdNum = (TextView) findViewById(R.id.EnteredNum);
 
-        if(savedInstanceState != null) { //이전에 저장해둔 상태가 있을경우 입력했던 번호를 불러와줌.
+        if (savedInstanceState != null) { //이전에 저장해둔 상태가 있을경우 입력했던 번호를 불러와줌.
             String data = savedInstanceState.getString(KEY_OF_TEL);
             enterdNum.setText(data);
-        }else {
+        } else {
             enterdNum.setText("");
         }
         for (int i = 0; i < 10; i++) {
@@ -216,10 +216,12 @@ public class DialActivity extends AppCompatActivity {
         btn_Contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(DummyData.dummyList.size() == 0) {
-                    Toast.makeText(DialActivity.this,"There is no Profile to Show in ContactList",Toast.LENGTH_LONG).show();
-                }else {
+                if (DummyData.dummyList.size() == 0) {
+                    Toast.makeText(DialActivity.this, "There is no Profile to Show in ContactList", Toast.LENGTH_LONG).show();
+                } else {
                     //TODO: intent 생성해서 ContactActivity로 넘기기
+                    Intent intent = new Intent(DialActivity.this, ContactActivity.class);
+                    startActivity(intent);
                 }
 
             }
@@ -230,7 +232,7 @@ public class DialActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DialActivity.this, AddProfileActivity.class);
                 //intent에 전화번호를 담아서 AddProfileActivity로 전달
-                intent.putExtra("tel",enterdNum.getText());
+                intent.putExtra("tel", enterdNum.getText());
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
             }
@@ -244,6 +246,7 @@ public class DialActivity extends AppCompatActivity {
      * ACTION_CALL의 경우 퍼미션 체크를 해주라고 뜨는건데
      * 아래 함수에서 동작은 퍼미션 체크 이후 수행하는 것이기에 상관 없음.
      * 따라서 SuppressLint로 warning은 간단하게 무시해준다.
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
