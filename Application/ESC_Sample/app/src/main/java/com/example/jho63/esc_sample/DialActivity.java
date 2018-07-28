@@ -72,9 +72,9 @@ public class DialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dial);
 
-        Intent intentOfThis = new Intent(this.getIntent());
-        intentOfThis.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        Intent intentOfThis = new Intent(this.getIntent());
+//        intentOfThis.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         btn = new Button[10];
         for (int i = 0; i < 10; i++) {

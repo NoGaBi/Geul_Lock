@@ -34,8 +34,8 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
         phoneNum = (TextView) findViewById(R.id.Contact_phoneNum);
         Name = (TextView) findViewById(R.id.Contact_Name);
         email = (TextView) findViewById(R.id.Contact_email);
@@ -47,6 +47,7 @@ public class ContactActivity extends AppCompatActivity {
         email.setText(DummyData.dummyList.get(DummyData.getPage()).getE_Mail());
         pageView.setText((DummyData.getPage() + 1) + "/" + DummyData.dummyList.size());
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class ContactActivity extends AppCompatActivity {
                 DummyData.PageDown();
                 Intent intent = new Intent(ContactActivity.this, ContactActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.back_slideinanim, R.anim.back_slideoutanim);
                 finish();
             }
         });
@@ -97,6 +99,7 @@ public class ContactActivity extends AppCompatActivity {
                 DummyData.PageUp();
                 Intent intent = new Intent(ContactActivity.this, ContactActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.next_slideinanim, R.anim.next_slideoutanim);
                 finish();
             }
         });
