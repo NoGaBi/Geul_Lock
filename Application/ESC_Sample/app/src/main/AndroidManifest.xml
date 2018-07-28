@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".AddProfileActivity"
             android:theme="@style/AppTheme2">
@@ -26,6 +27,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DialActivity" />
         </activity>
+
         <activity
             android:name=".ContactActivity"
             android:theme="@style/AppTheme2">
@@ -33,6 +35,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DialActivity" />
         </activity>
+
         <activity
             android:name=".SampleDataClass.EditActivity"
             android:theme="@style/AppTheme2">
@@ -40,6 +43,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ContactActivity" />
         </activity>
+
     </application>
 
 </manifest>

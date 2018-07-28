@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DialActivity"
-    tools:layout_editor_absoluteY="25dp">
+    tools:context=".DialActivity">
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
+        android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -19,27 +18,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <Button
         android:id="@+id/btn1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="1"
-        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/btn4"
         app:layout_constraintEnd_toStartOf="@+id/btn2"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline" />
-    <!--소문자도 사용 가능하도록 설정 ==> android:textAllCaps="false" 추가-->
 
     <Button
         android:id="@+id/btn2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="2"
         app:layout_constraintBottom_toTopOf="@+id/btn5"
         app:layout_constraintEnd_toStartOf="@+id/btn3"
@@ -51,7 +46,6 @@
         android:id="@+id/btn3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="3"
         app:layout_constraintBottom_toTopOf="@+id/btn6"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +57,6 @@
         android:id="@+id/btn4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="4"
         app:layout_constraintBottom_toTopOf="@+id/btn7"
         app:layout_constraintEnd_toStartOf="@+id/btn5"
@@ -75,7 +68,6 @@
         android:id="@+id/btn5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="5"
         app:layout_constraintBottom_toTopOf="@+id/btn8"
         app:layout_constraintEnd_toStartOf="@+id/btn6"
@@ -87,7 +79,6 @@
         android:id="@+id/btn6"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="6"
         app:layout_constraintBottom_toTopOf="@+id/btn9"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +90,6 @@
         android:id="@+id/btn7"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="7"
         app:layout_constraintBottom_toTopOf="@+id/btnStar"
         app:layout_constraintEnd_toStartOf="@+id/btn8"
@@ -111,7 +101,6 @@
         android:id="@+id/btn8"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="8"
         app:layout_constraintBottom_toTopOf="@+id/btn0"
         app:layout_constraintEnd_toStartOf="@+id/btn9"
@@ -123,7 +112,6 @@
         android:id="@+id/btn9"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="9"
         app:layout_constraintBottom_toTopOf="@+id/btnSharp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,22 +120,9 @@
         app:layout_constraintTop_toBottomOf="@+id/btn6" />
 
     <Button
-        android:id="@+id/btnStar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="3dp"
-        android:text="*"
-        app:layout_constraintBottom_toTopOf="@+id/btnCall"
-        app:layout_constraintEnd_toStartOf="@+id/btn0"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn7" />
-
-    <Button
         android:id="@+id/btn0"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="0"
         app:layout_constraintBottom_toTopOf="@+id/btnPlus"
         app:layout_constraintEnd_toStartOf="@+id/btnSharp"
@@ -156,23 +131,31 @@
         app:layout_constraintTop_toBottomOf="@+id/btn8" />
 
     <Button
-        android:id="@+id/btnDel"
+        android:id="@+id/btnStar"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
-        android:text="Del"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="*"
+        app:layout_constraintBottom_toTopOf="@+id/btnCall"
+        app:layout_constraintEnd_toStartOf="@+id/btn0"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn7" />
+
+    <Button
+        android:id="@+id/btnSharp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="#"
+        app:layout_constraintBottom_toTopOf="@+id/btnDel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnPlus"
-        app:layout_constraintTop_toBottomOf="@+id/btnSharp" />
+        app:layout_constraintStart_toEndOf="@+id/btn0"
+        app:layout_constraintTop_toBottomOf="@+id/btn9" />
 
     <Button
         android:id="@+id/btnCall"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="Call"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -182,22 +165,9 @@
         app:layout_constraintTop_toBottomOf="@+id/btnStar" />
 
     <Button
-        android:id="@+id/btnSharp"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="3dp"
-        android:text="#"
-        app:layout_constraintBottom_toTopOf="@+id/btnDel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn0"
-        app:layout_constraintTop_toBottomOf="@+id/btn9" />
-
-    <Button
         android:id="@+id/btnPlus"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="3dp"
         android:text="+"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnDel"
@@ -205,49 +175,56 @@
         app:layout_constraintStart_toEndOf="@+id/btnCall"
         app:layout_constraintTop_toBottomOf="@+id/btn0" />
 
-    <TextView
-        android:id="@+id/EnteredNum"
-        android:layout_width="245dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
-        android:id="@+id/btnContact"
+        android:id="@+id/btnDel"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Contact List"
+        android:layout_height="0dp"
+        android:text="Del"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toTopOf="@+id/btnAdd"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toEndOf="@+id/btnPlus"
+        app:layout_constraintTop_toBottomOf="@+id/btnSharp" />
+
+    <Button
+        android:id="@+id/btn_Contact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Contact List"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnAdd"
+        android:id="@+id/btn_Add"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="Add Contact"
         android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/btnContact" />
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/btn_Contact" />
+
+    <TextView
+        android:id="@+id/dial_enteredNum"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
