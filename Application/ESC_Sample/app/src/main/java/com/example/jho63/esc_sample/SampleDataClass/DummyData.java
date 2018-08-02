@@ -20,6 +20,7 @@ public class DummyData {
     public static int getPage() {
         return page;
     }
+
     public static int PageUp(){
         if(page < dummyList.size()) {
             page++;

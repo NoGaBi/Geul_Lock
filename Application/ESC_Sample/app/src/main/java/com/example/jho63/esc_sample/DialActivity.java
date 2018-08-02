@@ -87,8 +87,8 @@ public class DialActivity extends AppCompatActivity {
         btn_Sharp = (Button) findViewById(R.id.btnSharp);
         btn_Plus = (Button) findViewById(R.id.btnPlus);
         btn_Star = (Button) findViewById(R.id.btnStar);
-
         enterdNum = (TextView) findViewById(R.id.EnteredNum);
+
 
         if (savedInstanceState != null) { //이전에 저장해둔 상태가 있을경우 입력했던 번호를 불러와줌.
             String data = savedInstanceState.getString(KEY_OF_TEL);
@@ -96,6 +96,8 @@ public class DialActivity extends AppCompatActivity {
         } else {
             enterdNum.setText("");
         }
+
+
         for (int i = 0; i < 10; i++) {
             final int finalI = i;
             btn[i].setOnClickListener(new View.OnClickListener() {

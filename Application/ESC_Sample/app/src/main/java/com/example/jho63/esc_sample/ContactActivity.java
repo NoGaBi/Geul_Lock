@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.jho63.esc_sample.SampleDataClass.DummyData;
 import com.example.jho63.esc_sample.SampleDataClass.EditActivity;
-import com.example.jho63.esc_sample.SampleDataClass.Profile;
 
 public class ContactActivity extends AppCompatActivity {
 
@@ -36,7 +35,7 @@ public class ContactActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        phoneNum = (TextView) findViewById(R.id.Contact_phoneNum);
+        phoneNum = (TextView) findViewById(R.id.add_phoneNum);
         Name = (TextView) findViewById(R.id.Contact_Name);
         email = (TextView) findViewById(R.id.Contact_email);
         pageView = (TextView) findViewById(R.id.PageView);
@@ -64,7 +63,7 @@ public class ContactActivity extends AppCompatActivity {
         //메뉴바에 타이틀 지정
         actionBar.setTitle("Profile");
 
-        phoneNum = (TextView) findViewById(R.id.Contact_phoneNum);
+        phoneNum = (TextView) findViewById(R.id.add_phoneNum);
         Name = (TextView) findViewById(R.id.Contact_Name);
         email = (TextView) findViewById(R.id.Contact_email);
         pageView = (TextView) findViewById(R.id.PageView);

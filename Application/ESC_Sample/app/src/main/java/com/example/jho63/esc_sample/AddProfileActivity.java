@@ -42,7 +42,7 @@ public class AddProfileActivity extends AppCompatActivity {
         Intent intentOfThis = new Intent(this.getIntent());
         String tel = intentOfThis.getStringExtra("tel");
 
-        phoneNum = (EditText) findViewById(R.id.Contact_phoneNum);
+        phoneNum = (EditText) findViewById(R.id.add_phoneNum);
         phoneNum.setText( tel );
 
         email = (EditText) findViewById(R.id.add_email);
