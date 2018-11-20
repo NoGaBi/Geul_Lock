@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SampleRecycler</string>
+    <string name="LINEAR_TYPE">Linear Type</string>
+    <string name="GRID_TYPE">Grid Type</string>
+</resources>

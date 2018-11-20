@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ExInflate</string>
+    <string name="ADOPT">적용</string>
+    <string name="SHOW_AD">Show Ad</string>
+    <string name="AD_TITLE">This is Ad!</string>
+    <string name="CONTENT_TITLE">이건 콘텐트 뷰라네 헤헤헿</string>
+</resources>
