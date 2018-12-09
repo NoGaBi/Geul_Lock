@@ -56,20 +56,20 @@ public class PJ_Bank {
 					cmd = sc.nextInt();
 					if (cmd == 1) {// 계좌이체
 						System.out.print("입금 계좌번호: ");
-						savingID = sc.nextLine();
+						savingID = sc.next();
 						System.out.print("출금 계좌번호: ");
-						accountID = sc.nextLine();
+						accountID = sc.next();
 						System.out.print("금액(원): ");
 						money = sc.nextLong();
 
-						sql = "SELECT * FROM saving_account WHERE Account_ID='" + accountID + "'";
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + accountID + "'";
 						rs = stmt.executeQuery(sql);
 						if (!rs.next()) {
 							System.out.println("출금 계좌번호가 올바르지 않습니다.");
 							Thread.sleep(200);
 							continue;
 						}
-						if (!rs.getString(6).equals(User_ID)) {
+						if (!rs.getString(4).equals(User_ID)) {
 							System.out.println("출금 계좌가 본인의 계좌가 아닙니다.");
 							Thread.sleep(200);
 							continue;
@@ -80,7 +80,7 @@ public class PJ_Bank {
 							continue;
 						}
 
-						sql = "SELECT * FROM saving_account WHERE Account_ID='" + savingID + "'";
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + savingID + "'";
 						rs = stmt.executeQuery(sql);
 						if (!rs.next()) {
 							System.out.println("입금 계좌번호가 올바르지 않습니다.");
@@ -88,24 +88,117 @@ public class PJ_Bank {
 							continue;
 						}
 
-						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) + money) + "WHERE Account_ID='"
+						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) + money) + " WHERE Saving_ID='"
 								+ savingID + "'";
 						stmt.execute(sql);
 
-						sql = "SELECT * FROM saving_account WHERE Account_ID='" + accountID + "'";
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + accountID + "'";
 						rs = stmt.executeQuery(sql);
+						rs.next();
 
-						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money) + "WHERE Account_ID='"
+						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money) + " WHERE Saving_ID='"
 								+ accountID + "'";
 						stmt.execute(sql);
+						System.out.println("계좌이체가 완료되었습니다.");
 						break LoopSaving;
 
 					} else if (cmd == 2) {// 예금입금
-						// TODO
+						System.out.print("계좌번호: ");
+						accountID = sc.next();
+						System.out.print("입금 금액: ");
+						money = sc.nextLong();
+
+						sql = "SELECT Saving_ID, Saved_money, Max_Money FROM saving_account, kinds_of_saving WHERE Saving_ID='"
+								+ accountID + "' AND Product=Product_Name";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("일치하는 계좌가 없습니다.");
+							continue LoopSaving;
+						} else {
+							if (rs.getLong(3) < rs.getLong(2) + money) {
+								System.out.println("최대 예금액을 넘어섭니다.");
+								continue LoopSaving;
+							} else {
+								sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) + money)
+										+ " WHERE Saving_ID='" + accountID + "'";
+								stmt.execute(sql);
+								System.out.println("입금이 완료되었습니다.");
+							}
+						}
 					} else if (cmd == 3) {// 예금출금
-						// TODO
+						System.out.print("계좌번호: ");
+						accountID = sc.next();
+						System.out.print("출금 희망 금액: ");
+						money = sc.nextLong();
+
+						sql = "SELECT Saving_ID, Saved_money, Max_Money FROM saving_account, kinds_of_saving WHERE Saving_ID='"
+								+ accountID + "' AND Product=Product_Name AND User='" + User_ID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("일치하는 본인의 계좌가 없습니다.");
+							continue LoopSaving;
+						} else {
+							if (0 > rs.getLong(2) - money) {
+								System.out.println("출금 희망액이 현재 예치금액을 넘어섭니다.");
+								continue LoopSaving;
+							} else {
+								sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money)
+										+ " WHERE Saving_ID='" + accountID + "'";
+								stmt.execute(sql);
+								System.out.println("출금이 완료되었습니다.");
+							}
+						}
 					} else if (cmd == 4) {// 계좌이체 대출 상환
-						// TODO
+						System.out.print("대출 상환 계좌번호: ");
+						loanID = sc.next();
+						System.out.print("출금 계좌번호: ");
+						accountID = sc.next();
+						System.out.print("금액(원): ");
+						money = sc.nextLong();
+
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + accountID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("출금 계좌번호가 올바르지 않습니다.");
+							Thread.sleep(200);
+							continue;
+						}
+						if (!rs.getString(4).equals(User_ID)) {
+							System.out.println("출금 계좌가 본인의 계좌가 아닙니다.");
+							Thread.sleep(200);
+							continue;
+						}
+						if (rs.getLong(2) < money) {
+							System.out.println("잔액이 부족합니다.");
+							Thread.sleep(200);
+							continue;
+						}
+
+						sql = "SELECT * FROM loan_account WHERE Loan_ID='" + loanID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("대출상환 계좌번호가 올바르지 않습니다.");
+							Thread.sleep(200);
+							continue;
+						}
+
+						if (rs.getLong(2) < money) {
+							money = rs.getLong(2);
+						}
+
+						sql = "UPDATE loan_account SET Borrowed_money=" + (rs.getLong(2) - money) + " WHERE Loan_ID='"
+								+ loanID + "'";
+						stmt.execute(sql);
+
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + accountID + "'";
+						rs = stmt.executeQuery(sql);
+						rs.next();
+
+						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money) + " WHERE Saving_ID='"
+								+ accountID + "'";
+						stmt.execute(sql);
+						System.out.println(""+money+"원 대출상환이 완료되었습니다.");
+						break LoopSaving;
 					} else if (cmd == 5) {// 홈
 						break LoopSaving;
 					} else {
@@ -210,7 +303,7 @@ public class PJ_Bank {
 		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.사용자 관리\n2.예/적금 계좌 관리\n3.대출 계좌 관리\n4.지사 관리\n5.인사 관리\n6.로그아웃");
-			cmd = sc.nextLine();
+			cmd = sc.next();
 			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
 			} else if (cmd.equals("2")) {
@@ -235,7 +328,7 @@ public class PJ_Bank {
 		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.사용자 관리\n2.예/적금 계좌 관리\n3.대출 계좌 관리\n4.로그아웃");
-			cmd = sc.nextLine();
+			cmd = sc.next();
 			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
 			} else if (cmd.equals("2")) {
@@ -256,7 +349,7 @@ public class PJ_Bank {
 		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.사용자 관리\n2.예/적금 계좌 관리\n3.대출 계좌 관리\n4.인사 관리\n5.로그아웃");
-			cmd = sc.nextLine();
+			cmd = sc.next();
 			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
 			} else if (cmd.equals("2")) {
@@ -279,7 +372,7 @@ public class PJ_Bank {
 		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.사용자 관리\n2.예/적금 계좌 관리\n3.대출 계좌 관리\n4.대출 상품 관리\n5.예/적금 상품 관리\n6.로그아웃");
-			cmd = sc.nextLine();
+			cmd = sc.next();
 			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
 			} else if (cmd.equals("2")) {
@@ -311,9 +404,9 @@ public class PJ_Bank {
 		stmt = conn.createStatement();
 		while (true) {
 			System.out.print("Admin ID: ");
-			adminID = sc.nextLine();
+			adminID = sc.next();
 			System.out.print("Password: ");
-			password = sc.nextLine();
+			password = sc.next();
 
 			sql += " WHERE Admin_ID='" + adminID + "'";
 			// System.out.println("sql statement is: " + sql);
@@ -330,7 +423,7 @@ public class PJ_Bank {
 						System.out.println("\n.비밀번호가 틀렸거나, 존재하지 않는 관리자 ID 입니다.");
 						System.out.println("1.비밀번호 재입력");
 						System.out.println("2.초기화면으로 돌아가기");
-						cmd = sc.nextLine();
+						cmd = sc.next();
 
 						if (cmd.equals("1"))
 							break;
@@ -347,7 +440,7 @@ public class PJ_Bank {
 					System.out.println("\n.비밀번호가 틀렸거나, 존재하지 않는 관리자 ID 입니다.");
 					System.out.println("1.비밀번호 재입력");
 					System.out.println("2.초기화면으로 돌아가기");
-					cmd = sc.nextLine();
+					cmd = sc.next();
 
 					if (cmd.equals("1"))
 						break;
@@ -385,9 +478,9 @@ public class PJ_Bank {
 
 		while (true) {
 			System.out.print("User ID: ");
-			userID = sc.nextLine();
+			userID = sc.next();
 			System.out.print("Password: ");
-			password = sc.nextLine();
+			password = sc.next();
 
 			sql += " WHERE User_ID='" + userID + "'";
 			// System.out.println("sql statement is: " + sql);
@@ -405,7 +498,7 @@ public class PJ_Bank {
 						System.out.println("\n.비밀번호가 틀렸거나, 존재하지 않는 관리자 ID 입니다.");
 						System.out.println("1.비밀번호 재입력");
 						System.out.println("2.초기화면으로 돌아가기");
-						cmd = sc.nextLine();
+						cmd = sc.next();
 
 						if (cmd.equals("1"))
 							break;
@@ -416,13 +509,13 @@ public class PJ_Bank {
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
+				// System.out.println(e.getMessage());
+				// e.printStackTrace();
 				while (true) {
 					System.out.println("\n.비밀번호가 틀렸거나, 존재하지 않는 관리자 ID 입니다.");
 					System.out.println("1.비밀번호 재입력");
 					System.out.println("2.초기화면으로 돌아가기");
-					cmd = sc.nextLine();
+					cmd = sc.next();
 
 					if (cmd.equals("1"))
 						break;
@@ -449,20 +542,20 @@ public class PJ_Bank {
 		Loop1: while (true) {
 			// TODO: 占쏙옙占쏙옙占쏙옙占쏙옙 占십곤옙占쏙옙 占쏙옙占쏙옙처占쏙옙
 			System.out.print("등록하실 사용자의 정보를 입력해 주세요.\n이름(20자 이내): ");
-			Name = sc.nextLine();
+			Name = sc.next();
 			System.out.print("전화번호(15자 이내): ");
-			Phone = sc.nextLine();
+			Phone = sc.next();
 			System.out.print("주소지(30자 이내): ");
 			Address = sc.nextLine();
 			System.out.print("비밀번호(20자 이내): ");
-			Password = sc.nextLine();
+			Password = sc.next();
 
 			System.out.println("입력하신 정보 확인");
 			System.out.println("이름: " + Name + "\n전화번호: " + Phone + "\n주소지: " + Address);
 			Loop2: while (true) {
 				System.out.println("\n다음으로 진행하시려면 '1', 정보를 다시 입력하시려면 '2', 취소하시려면 '3'을 입력해 주세요.");
 
-				cmd = sc.nextLine();
+				cmd = sc.next();
 				if (cmd.equals("1"))
 					break Loop1;
 				else if (cmd.equals("2")) {
@@ -476,13 +569,13 @@ public class PJ_Bank {
 		}
 		while (true) {
 			System.out.print("비밀번호 재확인: ");
-			String passTemp = sc.nextLine();
+			String passTemp = sc.next();
 			if (passTemp.equals(Password))
 				break;
 			else {
 				while (true) {
 					System.out.println("처음 입력하신 비밀번호와 일치하지 않습니다.\n1.정보 입력으로 돌아가기\n2.비밀번호 재확인\n3.등록 취소");
-					cmd = sc.nextLine();
+					cmd = sc.next();
 					if (cmd.equals("1")) {
 						AddUser(conn);
 						return;
@@ -520,7 +613,7 @@ public class PJ_Bank {
 					"#지사 ID: " + rs.getString(1) + "#소재지: " + rs.getString(2) + "#전화번호: " + rs.getString(4) + "#");
 		}
 		while (true) {// 占쏙옙占쏙옙占싹댐옙 Branch占쏙옙占쏙옙 확占쏙옙
-			Branch = sc.nextLine();
+			Branch = sc.next();
 			sql = "SELECT COUNT(*) FROM branch WHERE Branch_ID='" + Branch + "'";
 			rs = stmt.executeQuery(sql);
 			rs.next();
@@ -578,11 +671,11 @@ public class PJ_Bank {
 
 		while (true) {
 			System.out.print("bank database port: ");
-			port = sc.nextLine();
+			port = sc.next();
 			System.out.print("root Username: ");
-			userName = sc.nextLine();
+			userName = sc.next();
 			System.out.print("root Password: ");
-			password = sc.nextLine();
+			password = sc.next();
 
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
@@ -596,7 +689,7 @@ public class PJ_Bank {
 
 				while (true) {
 					System.out.println("\n로그인 방식을 선택해 주세요....\n1.관리자 로그인\n2.사용자 로그인\n3.신규 사용자 등록\n4.프로그램 종료");
-					cmd = sc.nextLine();
+					cmd = sc.next();
 
 					try {
 						if (cmd.equals("1")) {
