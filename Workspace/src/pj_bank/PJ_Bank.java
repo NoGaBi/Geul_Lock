@@ -30,23 +30,24 @@ public class PJ_Bank {
 			cmd = sc.nextInt();
 
 			if (cmd == 1) {// 예적금 조회
-				sql = "SELECT Saving_ID, Saved_money, Start_date, Product FROM saving_account WHERE User='" + User_ID
-						+ "'";
-
-				rs = stmt.executeQuery(sql);
-
-				System.out.println("|계좌번호|예치금액|시작일자|상품명|");
-
-				int i;
-				for (i = 1; rs.next(); i++) {
-					System.out.println("|" + rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getDate(3) + "|"
-							+ rs.getString(4) + "|");
-				}
-				if (i == 1)
-					System.out.println("|계좌 없음|");
-
-				System.out.println("-------------------------------------------------------");
 				LoopSaving: while (true) {
+					sql = "SELECT Saving_ID, Saved_money, Start_date, Product FROM saving_account WHERE User='"
+							+ User_ID + "'";
+
+					rs = stmt.executeQuery(sql);
+
+					System.out.println("|계좌번호|예치금액|시작일자|상품명|");
+
+					int i;
+					for (i = 1; rs.next(); i++) {
+						System.out.println("|" + rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getDate(3) + "|"
+								+ rs.getString(4) + "|");
+					}
+					if (i == 1)
+						System.out.println("|계좌 없음|");
+
+					System.out.println("-------------------------------------------------------");
+
 					System.out.println("1.계좌이체(예금 to 예금)");
 					System.out.println("2.예금입금");
 					System.out.println("3.예금출금");
@@ -197,7 +198,7 @@ public class PJ_Bank {
 						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money) + " WHERE Saving_ID='"
 								+ accountID + "'";
 						stmt.execute(sql);
-						System.out.println(""+money+"원 대출상환이 완료되었습니다.");
+						System.out.println("" + money + "원 대출상환이 완료되었습니다.");
 						break LoopSaving;
 					} else if (cmd == 5) {// 홈
 						break LoopSaving;
@@ -260,11 +261,185 @@ public class PJ_Bank {
 						break LoopNewSaving;
 					}
 				}
-				// TODO
 			} else if (cmd == 3) {// 대출 조회
-				// TODO
+				LoopLoan: while (true) {
+					sql = "SELECT Loan_ID, Borrowed_money, Start_date, Product FROM loan_account WHERE User='" + User_ID
+							+ "'";
+
+					rs = stmt.executeQuery(sql);
+
+					System.out.println("|계좌번호|대출금액|시작일자|상품명|");
+
+					int i;
+					for (i = 1; rs.next(); i++) {
+						System.out.println("|" + rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getDate(3) + "|"
+								+ rs.getString(4) + "|");
+					}
+					if (i == 1)
+						System.out.println("|계좌 없음|");
+
+					System.out.println("-------------------------------------------------------");
+					System.out.println("1.대출");
+					System.out.println("2.대출 상환");
+					System.out.println("3.대출 상환(예금 to 대출)");
+					System.out.println("4.홈으로 돌아가기");
+
+					cmd = sc.nextInt();
+					if (cmd == 1) {// 추가대출
+						System.out.print("계좌번호: ");
+						accountID = sc.next();
+						System.out.print("대출 금액: ");
+						money = sc.nextLong();
+
+						sql = "SELECT Loan_ID, Borrowed_money, Max_Money FROM loan_account, kinds_of_loan WHERE Loan_ID='"
+								+ accountID + "' AND Product=Product_Name";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("일치하는 계좌가 없습니다.");
+							continue LoopLoan;
+						} else {
+							if (rs.getLong(3) < rs.getLong(2) + money) {
+								System.out.println("최대 대출액을 넘어섭니다.");
+								continue LoopLoan;
+							} else {
+								sql = "UPDATE loan_account SET Borrowed_money=" + (rs.getLong(2) + money)
+										+ " WHERE Loan_ID='" + accountID + "'";
+								stmt.execute(sql);
+								System.out.println("대출이 완료되었습니다.");
+							}
+						}
+					} else if (cmd == 2) {// 대출 상환
+						System.out.print("계좌번호: ");
+						accountID = sc.next();
+						System.out.print("대출 상환 금액: ");
+						money = sc.nextLong();
+
+						sql = "SELECT Loan_ID, Borrowed_money, Max_Money FROM loan_account, kinds_of_loan WHERE Loan_ID='"
+								+ accountID + "' AND Product=Product_Name AND User='" + User_ID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("일치하는 본인의 계좌가 없습니다.");
+							continue LoopLoan;
+						} else {
+							if (rs.getLong(2) < money) {
+								money = rs.getLong(2);
+							}
+
+							sql = "UPDATE loan_account SET Borrowed_money=" + (rs.getLong(2) - money)
+									+ " WHERE Loan_ID='" + accountID + "'";
+							stmt.execute(sql);
+							System.out.println("" + money + "원 대출상환이 완료되었습니다.");
+						}
+					} else if (cmd == 3) {// 계좌이체 대출 상환
+						System.out.print("대출 상환 계좌번호: ");
+						loanID = sc.next();
+						System.out.print("출금 계좌번호: ");
+						accountID = sc.next();
+						System.out.print("금액(원): ");
+						money = sc.nextLong();
+
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + accountID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("출금 계좌번호가 올바르지 않습니다.");
+							Thread.sleep(200);
+							continue;
+						}
+						if (!rs.getString(4).equals(User_ID)) {
+							System.out.println("출금 계좌가 본인의 계좌가 아닙니다.");
+							Thread.sleep(200);
+							continue;
+						}
+						if (rs.getLong(2) < money) {
+							System.out.println("잔액이 부족합니다.");
+							Thread.sleep(200);
+							continue;
+						}
+
+						sql = "SELECT * FROM loan_account WHERE Loan_ID='" + loanID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("대출상환 계좌번호가 올바르지 않습니다.");
+							Thread.sleep(200);
+							continue;
+						}
+
+						if (rs.getLong(2) < money) {
+							money = rs.getLong(2);
+						}
+
+						sql = "UPDATE loan_account SET Borrowed_money=" + (rs.getLong(2) - money) + " WHERE Loan_ID='"
+								+ loanID + "'";
+						stmt.execute(sql);
+
+						sql = "SELECT * FROM saving_account WHERE Saving_ID='" + accountID + "'";
+						rs = stmt.executeQuery(sql);
+						rs.next();
+
+						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money) + " WHERE Saving_ID='"
+								+ accountID + "'";
+						stmt.execute(sql);
+						System.out.println("" + money + "원 대출상환이 완료되었습니다.");
+						break LoopLoan;
+					} else if (cmd == 4) {// 홈
+						break LoopLoan;
+					} else {
+						System.out.println("잘못된 입력입니다.");
+					}
+				}
 			} else if (cmd == 4) {// 대출 신규
-				// TODO
+				LoopNewLoan: while (true) {
+					sql = "SELECT kinds_of_loan.* FROM kinds_of_loan, user WHERE User_ID='" + User_ID
+							+ "' AND Affordable_Credit_rate >= Credit_rate";
+					rs = stmt.executeQuery(sql);
+					System.out.println("가입하고 싶으신 상품명을 입력해 주세요.\n|상품명|최대대출액|대출 상환 기한(일)|가입가능신용도|이자|");
+					int i;
+					for (i = 1; rs.next(); i++) {
+						System.out.println("|" + rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getInt(3) + "|"
+								+ rs.getInt(4) + "|" + rs.getBigDecimal(5) + "|");
+					}
+					if (i == 1) {
+						System.out.println("|가입 가능 상품 없음|");
+						break LoopNewLoan;
+					}
+
+					System.out.print("가입할 상품명: ");
+					product = sc.next();
+
+					sql = "SELECT Product_Name FROM kinds_of_loan, user WHERE Affordable_Credit_rate >= Credit_rate AND Product_Name='"
+							+ product + "'";
+					rs = stmt.executeQuery(sql);
+					if (!rs.next()) {
+						while (true) {
+							System.out.println("입력하신 상품은 존재하지 않습니다.\n1.상품명 다시 보기\n2.신규 가입 취소");
+							cmd = sc.nextInt();
+
+							if (cmd == 1) {
+								continue LoopNewLoan;
+							} else if (cmd == 2) {
+								break LoopNewLoan;
+							} else {
+								System.out.println("잘못된 입력입니다.");
+							}
+						}
+					} else {
+
+						sql = "SELECT table_name, table_rows FROM information_schema.tables WHERE table_schema='bank' AND table_name='loan_account'";
+						rs = stmt.executeQuery(sql);
+						rs.next();
+						int sizeOfLoan = rs.getInt(2);
+						accountID = String.valueOf(sizeOfLoan + 1);
+						accountID = "000000000".substring(accountID.length()) + accountID;
+
+						System.out.println("신규 대출계좌번호는 '" + accountID + "' 입니다.");
+						java.util.Date utilDate = new java.util.Date();
+						java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+						sql = "INSERT INTO loan_account values ('" + accountID + "', 0, '" + sqlDate + "', '" + User_ID
+								+ "', '" + product + "')";
+						stmt.execute(sql);
+						break LoopNewLoan;
+					}
+				}
 			} else if (cmd == 5) {// 로그아웃
 				break LoopHome;
 			} else {
