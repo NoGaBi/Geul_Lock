@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ExImplicitIntent</string>
+    <string name="search_editText">검색어 입력</string>
+    <string name="search_button">검색</string>
+    <string name="call_editText">전화번호 입력</string>
+    <string name="call_button">전화걸기</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ExFragment</string>
+    <string name="ButtonText">적용</string>
+    <string name="parameter_1">Parameter 1</string>
+    <string name="parameter_2">Parameter 2</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
