@@ -7,59 +7,221 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class PJ_Bank{
+public class PJ_Bank {
 
 	private static Scanner sc;
 
-	private static void UserHome(Connection conn, String User_ID) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½
+	private static void UserHome(Connection conn, String User_ID) throws Exception {
+		sc = new Scanner(System.in);
+		String accountID, savingID, loanID, product, sql;
+		int cmd;
+		long money;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		stmt = conn.createStatement();
+		LoopHome: while (true) {
+			System.out.println("#Home#");
+			System.out.println("1.¿¹/Àû±Ý °èÁÂ Á¶È¸");
+			System.out.println("2.¿¹/Àû±Ý °èÁÂ ½Å±Ô¹ß±Þ");
+			System.out.println("3.´ëÃâ °èÁÂ Á¶È¸");
+			System.out.println("4.´ëÃâ °èÁÂ ½Å±Ô¹ß±Þ");
+			System.out.println("5.·Î±×¾Æ¿ô");
+			cmd = sc.nextInt();
+
+			if (cmd == 1) {// ¿¹Àû±Ý Á¶È¸
+				sql = "SELECT Saving_ID, Saved_money, Start_date, Product FROM saving_account WHERE User='" + User_ID
+						+ "'";
+
+				rs = stmt.executeQuery(sql);
+
+				System.out.println("|°èÁÂ¹øÈ£|¿¹Ä¡±Ý¾×|½ÃÀÛÀÏÀÚ|»óÇ°¸í|");
+
+				int i;
+				for (i = 1; rs.next(); i++) {
+					System.out.println("|" + rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getDate(3) + "|"
+							+ rs.getString(4) + "|");
+				}
+				if (i == 1)
+					System.out.println("|°èÁÂ ¾øÀ½|");
+
+				System.out.println("-------------------------------------------------------");
+				LoopSaving: while (true) {
+					System.out.println("1.°èÁÂÀÌÃ¼(¿¹±Ý to ¿¹±Ý)");
+					System.out.println("2.¿¹±ÝÀÔ±Ý");
+					System.out.println("3.¿¹±ÝÃâ±Ý");
+					System.out.println("4.´ëÃâ »óÈ¯(¿¹±Ý to ´ëÃâ)");
+					System.out.println("5.È¨À¸·Î µ¹¾Æ°¡±â");
+
+					cmd = sc.nextInt();
+					if (cmd == 1) {// °èÁÂÀÌÃ¼
+						System.out.print("ÀÔ±Ý °èÁÂ¹øÈ£: ");
+						savingID = sc.nextLine();
+						System.out.print("Ãâ±Ý °èÁÂ¹øÈ£: ");
+						accountID = sc.nextLine();
+						System.out.print("±Ý¾×(¿ø): ");
+						money = sc.nextLong();
+
+						sql = "SELECT * FROM saving_account WHERE Account_ID='" + accountID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("Ãâ±Ý °èÁÂ¹øÈ£°¡ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù.");
+							Thread.sleep(200);
+							continue;
+						}
+						if (!rs.getString(6).equals(User_ID)) {
+							System.out.println("Ãâ±Ý °èÁÂ°¡ º»ÀÎÀÇ °èÁÂ°¡ ¾Æ´Õ´Ï´Ù.");
+							Thread.sleep(200);
+							continue;
+						}
+						if (rs.getLong(2) < money) {
+							System.out.println("ÀÜ¾×ÀÌ ºÎÁ·ÇÕ´Ï´Ù.");
+							Thread.sleep(200);
+							continue;
+						}
+
+						sql = "SELECT * FROM saving_account WHERE Account_ID='" + savingID + "'";
+						rs = stmt.executeQuery(sql);
+						if (!rs.next()) {
+							System.out.println("ÀÔ±Ý °èÁÂ¹øÈ£°¡ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù.");
+							Thread.sleep(200);
+							continue;
+						}
+
+						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) + money) + "WHERE Account_ID='"
+								+ savingID + "'";
+						stmt.execute(sql);
+
+						sql = "SELECT * FROM saving_account WHERE Account_ID='" + accountID + "'";
+						rs = stmt.executeQuery(sql);
+
+						sql = "UPDATE saving_account SET Saved_money=" + (rs.getLong(2) - money) + "WHERE Account_ID='"
+								+ accountID + "'";
+						stmt.execute(sql);
+						break LoopSaving;
+
+					} else if (cmd == 2) {// ¿¹±ÝÀÔ±Ý
+						// TODO
+					} else if (cmd == 3) {// ¿¹±ÝÃâ±Ý
+						// TODO
+					} else if (cmd == 4) {// °èÁÂÀÌÃ¼ ´ëÃâ »óÈ¯
+						// TODO
+					} else if (cmd == 5) {// È¨
+						break LoopSaving;
+					} else {
+						System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
+					}
+				}
+
+			} else if (cmd == 2) {// ¿¹Àû±Ý ½Å±Ô
+
+				LoopNewSaving: while (true) {
+					sql = "SELECT kinds_of_saving.* FROM kinds_of_saving, user WHERE User_ID='" + User_ID
+							+ "' AND Affordable_Credit_rate >= Credit_rate";
+					rs = stmt.executeQuery(sql);
+					System.out.println("°¡ÀÔÇÏ°í ½ÍÀ¸½Å »óÇ°¸íÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.\n|»óÇ°¸í|ÃÖ´ë¿¹±Ý¾×|°¡ÀÔ°¡´É½Å¿ëµµ|ÀÌÀÚ|");
+					int i;
+					for (i = 1; rs.next(); i++) {
+						System.out.println("|" + rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getInt(3) + "|"
+								+ rs.getBigDecimal(4) + "|");
+					}
+					if (i == 1) {
+						System.out.println("|°¡ÀÔ °¡´É »óÇ° ¾øÀ½|");
+						break LoopNewSaving;
+					}
+
+					System.out.print("°¡ÀÔÇÒ »óÇ°¸í: ");
+					product = sc.next();
+
+					sql = "SELECT Product_Name FROM kinds_of_saving, user WHERE Affordable_Credit_rate >= Credit_rate AND Product_Name='"
+							+ product + "'";
+					rs = stmt.executeQuery(sql);
+					if (!rs.next()) {
+						while (true) {
+							System.out.println("ÀÔ·ÂÇÏ½Å »óÇ°Àº Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.\n1.»óÇ°¸í ´Ù½Ã º¸±â\n2.½Å±Ô °¡ÀÔ Ãë¼Ò");
+							cmd = sc.nextInt();
+
+							if (cmd == 1) {
+								continue LoopNewSaving;
+							} else if (cmd == 2) {
+								break LoopNewSaving;
+							} else {
+								System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
+							}
+						}
+					} else {
+
+						sql = "SELECT table_name, table_rows FROM information_schema.tables WHERE table_schema='bank' AND table_name='saving_account'";
+						rs = stmt.executeQuery(sql);
+						rs.next();
+						int sizeOfSaving = rs.getInt(2);
+						accountID = String.valueOf(sizeOfSaving + 1);
+						accountID = "000000000".substring(accountID.length()) + accountID;
+
+						System.out.println("½Å±Ô ¿¹±Ý ID´Â '" + accountID + "' ÀÔ´Ï´Ù.");
+						java.util.Date utilDate = new java.util.Date();
+						java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+						sql = "INSERT INTO saving_account values ('" + accountID + "', 0, '" + sqlDate + "', '"
+								+ User_ID + "', '" + product + "')";
+						stmt.execute(sql);
+						break LoopNewSaving;
+					}
+				}
+				// TODO
+			} else if (cmd == 3) {// ´ëÃâ Á¶È¸
+				// TODO
+			} else if (cmd == 4) {// ´ëÃâ ½Å±Ô
+				// TODO
+			} else if (cmd == 5) {// ·Î±×¾Æ¿ô
+				break LoopHome;
+			} else {
+				System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
+				continue;
+			}
+		}
+	}
+
+	private static void BranchManage(Connection conn, String Admin_ID) throws Exception {
 		// TODO
 	}
 
-	private static void BranchManage(Connection conn, String Admin_ID) {// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	private static void UserManage(Connection conn, String Admin_ID) throws Exception {
 		// TODO
 	}
 
-	private static void UserManage(Connection conn, String Admin_ID) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	private static void SavingManage(Connection conn, String Admin_ID) throws Exception {
 		// TODO
 	}
 
-	private static void AdminManage(Connection conn, String Admin_ID) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î»ï¿½ ï¿½ï¿½ï¿½ï¿½
+	private static void LoanManage(Connection conn, String Admin_ID) throws Exception {
 		// TODO
 	}
 
-	private static void SavingManage(Connection conn, String Admin_ID) {// ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	private static void LoanProductManage(Connection conn, String Admin_ID) throws Exception {
 		// TODO
 	}
 
-	private static void LoanManage(Connection conn, String Admin_ID) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-		// TODO
-	}
-
-	private static void LoanProductManage(Connection conn, String Admin_ID) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½
-		// TODO
-	}
-
-	private static void SavingProductManage(Connection conn, String Admin_ID) {// ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½
+	private static void SavingProductManage(Connection conn, String Admin_ID) throws Exception {
 		// TODO
 	}
 
 	private static void CEOAdmin(Connection conn, String Admin_ID) throws Exception {// DONE
 		sc = new Scanner(System.in);
-		String command;
+		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.»ç¿ëÀÚ °ü¸®\n2.¿¹/Àû±Ý °èÁÂ °ü¸®\n3.´ëÃâ °èÁÂ °ü¸®\n4.Áö»ç °ü¸®\n5.ÀÎ»ç °ü¸®\n6.·Î±×¾Æ¿ô");
-			command = sc.nextLine();
-			if (command.equals("1")) {
+			cmd = sc.nextLine();
+			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
-			} else if (command.equals("2")) {
+			} else if (cmd.equals("2")) {
 				SavingManage(conn, Admin_ID);
-			} else if (command.equals("3")) {
+			} else if (cmd.equals("3")) {
 				LoanManage(conn, Admin_ID);
-			} else if (command.equals("4")) {
+			} else if (cmd.equals("4")) {
 				BranchManage(conn, Admin_ID);
-			} else if (command.equals("5")) {
+			} else if (cmd.equals("5")) {
 				StaffManagingAdmin(conn, Admin_ID);
-			} else if (command.equals("6")) {
+			} else if (cmd.equals("6")) {
 				break LoopHome;
 			} else {
 				System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -70,17 +232,17 @@ public class PJ_Bank{
 
 	private static void RAdmin(Connection conn, String Admin_ID) throws Exception {// DONE
 		sc = new Scanner(System.in);
-		String command;
+		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.»ç¿ëÀÚ °ü¸®\n2.¿¹/Àû±Ý °èÁÂ °ü¸®\n3.´ëÃâ °èÁÂ °ü¸®\n4.·Î±×¾Æ¿ô");
-			command = sc.nextLine();
-			if (command.equals("1")) {
+			cmd = sc.nextLine();
+			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
-			} else if (command.equals("2")) {
+			} else if (cmd.equals("2")) {
 				SavingManage(conn, Admin_ID);
-			} else if (command.equals("3")) {
+			} else if (cmd.equals("3")) {
 				LoanManage(conn, Admin_ID);
-			} else if (command.equals("4")) {
+			} else if (cmd.equals("4")) {
 				break LoopHome;
 			} else {
 				System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -91,19 +253,19 @@ public class PJ_Bank{
 
 	private static void StaffManagingAdmin(Connection conn, String Admin_ID) throws Exception {// DONE
 		sc = new Scanner(System.in);
-		String command;
+		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.»ç¿ëÀÚ °ü¸®\n2.¿¹/Àû±Ý °èÁÂ °ü¸®\n3.´ëÃâ °èÁÂ °ü¸®\n4.ÀÎ»ç °ü¸®\n5.·Î±×¾Æ¿ô");
-			command = sc.nextLine();
-			if (command.equals("1")) {
+			cmd = sc.nextLine();
+			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
-			} else if (command.equals("2")) {
+			} else if (cmd.equals("2")) {
 				SavingManage(conn, Admin_ID);
-			} else if (command.equals("3")) {
+			} else if (cmd.equals("3")) {
 				LoanManage(conn, Admin_ID);
-			} else if (command.equals("4")) {
+			} else if (cmd.equals("4")) {
 				StaffManagingAdmin(conn, Admin_ID);
-			} else if (command.equals("5")) {
+			} else if (cmd.equals("5")) {
 				break LoopHome;
 			} else {
 				System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -114,21 +276,21 @@ public class PJ_Bank{
 
 	private static void ProductAdmin(Connection conn, String Admin_ID) throws Exception {// DONE
 		sc = new Scanner(System.in);
-		String command;
+		String cmd;
 		LoopHome: while (true) {
 			System.out.println("\n#Home#\n1.»ç¿ëÀÚ °ü¸®\n2.¿¹/Àû±Ý °èÁÂ °ü¸®\n3.´ëÃâ °èÁÂ °ü¸®\n4.´ëÃâ »óÇ° °ü¸®\n5.¿¹/Àû±Ý »óÇ° °ü¸®\n6.·Î±×¾Æ¿ô");
-			command = sc.nextLine();
-			if (command.equals("1")) {
+			cmd = sc.nextLine();
+			if (cmd.equals("1")) {
 				UserManage(conn, Admin_ID);
-			} else if (command.equals("2")) {
+			} else if (cmd.equals("2")) {
 				SavingManage(conn, Admin_ID);
-			} else if (command.equals("3")) {
+			} else if (cmd.equals("3")) {
 				LoanManage(conn, Admin_ID);
-			} else if (command.equals("4")) {
+			} else if (cmd.equals("4")) {
 				LoanProductManage(conn, Admin_ID);
-			} else if (command.equals("5")) {
+			} else if (cmd.equals("5")) {
 				SavingProductManage(conn, Admin_ID);
-			} else if (command.equals("6")) {
+			} else if (cmd.equals("6")) {
 				break LoopHome;
 			} else {
 				System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -139,7 +301,7 @@ public class PJ_Bank{
 
 	private static void AdminMode(Connection conn) throws Exception {// DONE
 		sc = new Scanner(System.in);
-		String adminID, password, command, sql;
+		String adminID, password, cmd, sql;
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -168,11 +330,11 @@ public class PJ_Bank{
 						System.out.println("\n.ºñ¹Ð¹øÈ£°¡ Æ²·È°Å³ª, Á¸ÀçÇÏÁö ¾Ê´Â °ü¸®ÀÚ ID ÀÔ´Ï´Ù.");
 						System.out.println("1.ºñ¹Ð¹øÈ£ ÀçÀÔ·Â");
 						System.out.println("2.ÃÊ±âÈ­¸éÀ¸·Î µ¹¾Æ°¡±â");
-						command = sc.nextLine();
+						cmd = sc.nextLine();
 
-						if (command.equals("1"))
+						if (cmd.equals("1"))
 							break;
-						else if (command.equals("2"))
+						else if (cmd.equals("2"))
 							return;
 						else
 							System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -185,11 +347,11 @@ public class PJ_Bank{
 					System.out.println("\n.ºñ¹Ð¹øÈ£°¡ Æ²·È°Å³ª, Á¸ÀçÇÏÁö ¾Ê´Â °ü¸®ÀÚ ID ÀÔ´Ï´Ù.");
 					System.out.println("1.ºñ¹Ð¹øÈ£ ÀçÀÔ·Â");
 					System.out.println("2.ÃÊ±âÈ­¸éÀ¸·Î µ¹¾Æ°¡±â");
-					command = sc.nextLine();
+					cmd = sc.nextLine();
 
-					if (command.equals("1"))
+					if (cmd.equals("1"))
 						break;
-					else if (command.equals("2"))
+					else if (cmd.equals("2"))
 						return;
 					else
 						System.out.println("\nÀß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -214,7 +376,7 @@ public class PJ_Bank{
 
 	private static void UserMode(Connection conn) throws Exception {// DONE
 		sc = new Scanner(System.in);
-		String userID, password, command, sql;
+		String userID, password, cmd, sql;
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -243,11 +405,11 @@ public class PJ_Bank{
 						System.out.println("\n.ºñ¹Ð¹øÈ£°¡ Æ²·È°Å³ª, Á¸ÀçÇÏÁö ¾Ê´Â °ü¸®ÀÚ ID ÀÔ´Ï´Ù.");
 						System.out.println("1.ºñ¹Ð¹øÈ£ ÀçÀÔ·Â");
 						System.out.println("2.ÃÊ±âÈ­¸éÀ¸·Î µ¹¾Æ°¡±â");
-						command = sc.nextLine();
+						cmd = sc.nextLine();
 
-						if (command.equals("1"))
+						if (cmd.equals("1"))
 							break;
-						else if (command.equals("2"))
+						else if (cmd.equals("2"))
 							return;
 						else
 							System.out.println("\nÀß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -260,11 +422,11 @@ public class PJ_Bank{
 					System.out.println("\n.ºñ¹Ð¹øÈ£°¡ Æ²·È°Å³ª, Á¸ÀçÇÏÁö ¾Ê´Â °ü¸®ÀÚ ID ÀÔ´Ï´Ù.");
 					System.out.println("1.ºñ¹Ð¹øÈ£ ÀçÀÔ·Â");
 					System.out.println("2.ÃÊ±âÈ­¸éÀ¸·Î µ¹¾Æ°¡±â");
-					command = sc.nextLine();
+					cmd = sc.nextLine();
 
-					if (command.equals("1"))
+					if (cmd.equals("1"))
 						break;
-					else if (command.equals("2"))
+					else if (cmd.equals("2"))
 						return;
 					else
 						System.out.println("\nÀß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -281,7 +443,7 @@ public class PJ_Bank{
 		ResultSet rs = null;
 		// user values (Name, User_ID, Phone, Credit_rate, Address, Admin, Branch,
 		// Password)
-		String sql, command, Name, User_ID, Phone, Address, Admin, Branch, Password;
+		String sql, cmd, Name, User_ID, Phone, Address, Admin, Branch, Password;
 		int Credit_rate;
 
 		Loop1: while (true) {
@@ -300,12 +462,12 @@ public class PJ_Bank{
 			Loop2: while (true) {
 				System.out.println("\n´ÙÀ½À¸·Î ÁøÇàÇÏ½Ã·Á¸é '1', Á¤º¸¸¦ ´Ù½Ã ÀÔ·ÂÇÏ½Ã·Á¸é '2', Ãë¼ÒÇÏ½Ã·Á¸é '3'À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
 
-				command = sc.nextLine();
-				if (command.equals("1"))
+				cmd = sc.nextLine();
+				if (cmd.equals("1"))
 					break Loop1;
-				else if (command.equals("2")) {
+				else if (cmd.equals("2")) {
 					break Loop2;
-				}else if (command.equals("3")) {
+				} else if (cmd.equals("3")) {
 					return;
 				} else {
 					System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -320,13 +482,13 @@ public class PJ_Bank{
 			else {
 				while (true) {
 					System.out.println("Ã³À½ ÀÔ·ÂÇÏ½Å ºñ¹Ð¹øÈ£¿Í ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.\n1.Á¤º¸ ÀÔ·ÂÀ¸·Î µ¹¾Æ°¡±â\n2.ºñ¹Ð¹øÈ£ ÀçÈ®ÀÎ\n3.µî·Ï Ãë¼Ò");
-					command = sc.nextLine();
-					if (command.equals("1")) {
+					cmd = sc.nextLine();
+					if (cmd.equals("1")) {
 						AddUser(conn);
 						return;
-					} else if (command.equals("2")) {
+					} else if (cmd.equals("2")) {
 						break;
-					} else if (command.equals("3")) {
+					} else if (cmd.equals("3")) {
 						return;
 					} else {
 						System.out.println("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
@@ -410,31 +572,22 @@ public class PJ_Bank{
 	}
 
 	public static void main(String[] args) {// DONE
-		// Connection ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½ï¿½ï¿½ï¿½ï¿½ importï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ com.mysql.connectionï¿½ï¿½ ï¿½Æ´ï¿½
-		// java Ç¥ï¿½ï¿½ï¿½ï¿½ java.sql.Connection Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ importï¿½Ø¾ï¿½ ï¿½Ñ´ï¿½.
 		Connection conn = null;
 		sc = new Scanner(System.in);
-		String userName, password, command;
+		String userName, password, cmd, port;
 
 		while (true) {
+			System.out.print("bank database port: ");
+			port = sc.nextLine();
 			System.out.print("root Username: ");
 			userName = sc.nextLine();
 			System.out.print("root Password: ");
 			password = sc.nextLine();
 
 			try {
-				// 1. ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½Îµï¿½
-				// ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
-				// mysql, oracle ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½.
-				// mysqlï¿½ï¿½ "com.mysql.jdbc.Driver"ï¿½Ì¸ï¿½, ï¿½Ì´ï¿½ ï¿½Ü¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ ï¿½ï¿½ï¿½Û¸ï¿½ï¿½Ï¸ï¿½ ï¿½È´ï¿½.
-				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½ jar ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ com.mysql.jdbc ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½ Driver ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½.
 				Class.forName("com.mysql.jdbc.Driver");
 
-				// 2. ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
-				// ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Connection ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Þ¶ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½Ñ´ï¿½.
-				// Connectionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ url ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ç¸¶ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½.
-				// mysqlï¿½ï¿½ "jdbc:mysql://localhost/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½dbï¿½Ì¸ï¿½" ï¿½Ì´ï¿½.
-				String url = "jdbc:mysql://localhost:3306/bank?characterEncoding=UTF-8&serverTimezone=UTC";
+				String url = "jdbc:mysql://localhost:" + port + "/bank?characterEncoding=UTF-8&serverTimezone=UTC";
 
 				// @param getConnection(url, userName, password);
 				// @return Connection
@@ -443,16 +596,16 @@ public class PJ_Bank{
 
 				while (true) {
 					System.out.println("\n·Î±×ÀÎ ¹æ½ÄÀ» ¼±ÅÃÇØ ÁÖ¼¼¿ä....\n1.°ü¸®ÀÚ ·Î±×ÀÎ\n2.»ç¿ëÀÚ ·Î±×ÀÎ\n3.½Å±Ô »ç¿ëÀÚ µî·Ï\n4.ÇÁ·Î±×·¥ Á¾·á");
-					command = sc.nextLine();
+					cmd = sc.nextLine();
 
 					try {
-						if (command.equals("1")) {
+						if (cmd.equals("1")) {
 							AdminMode(conn);
-						} else if (command.equals("2")) {
+						} else if (cmd.equals("2")) {
 							UserMode(conn);
-						} else if (command.equals("3")) {
+						} else if (cmd.equals("3")) {
 							AddUser(conn);
-						} else if (command.equals("4")) {
+						} else if (cmd.equals("4")) {
 							System.out.println("ÇÁ·Î±×·¥À» Á¾·áÇÕ´Ï´Ù...");
 							Thread.sleep(1500);
 							break;
