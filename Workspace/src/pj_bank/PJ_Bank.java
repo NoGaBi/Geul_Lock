@@ -11,7 +11,7 @@ public class PJ_Bank {
 
 	private static Scanner sc;
 
-	private static void UserHome(Connection conn, String User_ID) throws Exception {
+	private static void UserHome(Connection conn, String User_ID) throws Exception {// DONE
 		sc = new Scanner(System.in);
 		String accountID, savingID, loanID, product, sql;
 		int cmd;
@@ -450,26 +450,135 @@ public class PJ_Bank {
 	}
 
 	private static void BranchManage(Connection conn, String Admin_ID) throws Exception {
-		// TODO
+		sc = new Scanner(System.in);
+		String sql1, sql2;
+
+		int cmd;
+
+		long loanTotal, saveTotal;
+
+		Statement stmt1 = null;
+		Statement stmt2 = null;
+
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+
+		stmt1 = conn.createStatement();
+		stmt2 = conn.createStatement();
+		BranchM: while (true) {
+			System.out.println("\n| 지사번호 | 소재지 | 연락처 | 예치금액 | 대출금액 |");
+			sql1 = "SELECT * FROM branch";
+			rs1 = stmt1.executeQuery(sql1);
+			LoopRs1: while (rs1.next()) {
+				loanTotal = 0;
+				saveTotal = 0;
+				sql2 = "SELECT Saved_money FROM saving_account, user WHERE User=User_ID AND Branch='" + rs1.getString(1)
+						+ "'";
+				rs2 = stmt2.executeQuery(sql2);
+				LoopRs2Save: while (rs2.next()) {
+					saveTotal += rs2.getLong(1);
+				}
+				sql2 = "SELECT Borrowed_money FROM loan_account, user WHERE User=User_ID AND Branch='"
+						+ rs1.getString(1) + "'";
+				rs2 = stmt2.executeQuery(sql2);
+				LoopRs2Loan: while (rs2.next()) {
+					loanTotal += rs2.getLong(1);
+				}
+
+				System.out.println("| " + rs1.getString(1) + " | " + rs1.getString(2) + " | " + rs1.getString(3) + " | "
+						+ saveTotal + " | " + loanTotal + " | ");
+			}
+
+			System.out.println("1.지사 추가 등록");
+			System.out.println("2.지사 흡수 합병");
+			System.out.println("3.홈으로 돌아가기");
+			cmd = sc.nextInt();
+			if (cmd == 1) {// 지사 등록
+				System.out.println("새 지사 정보 입력");
+				System.out.print("소재지(주소, 30자 이내): ");
+				sc.nextLine();
+				String address = sc.nextLine();
+				System.out.print("전화번호(15자 이내): ");
+				String tell = sc.next();
+				String branchID = "000000000";
+				sql1 = "SELECT Branch_ID FROM branch";
+				rs1 = stmt1.executeQuery(sql1);
+				int i;
+				for (i = 1; rs1.next(); i++) {
+					if (i < new Integer(rs1.getString(1)))
+						break;
+				}
+				branchID = String.valueOf(i);
+				branchID = "000000000".substring(branchID.length()) + branchID;
+
+				sql1 = "INSERT INTO branch values ('" + branchID + "', '" + address + "', '" + tell + "')";
+				stmt1.execute(sql1);
+				System.out.println("새로운 지사 ['" + branchID + "', '" + address + "', '" + tell + "']가 등록되었습니다.");
+			} else if (cmd == 2) {// 지사 합병
+				System.out.print("폐점 지사 ID: ");
+				String closeBranch = sc.next();
+				System.out.println("합병 지사 ID: ");
+				String intoBranch = sc.next();
+				//TODO
+
+			} else if (cmd == 3) {
+				return;
+			} else {
+				System.out.println("잘못된 입력입니다.");
+				continue BranchM;
+			}
+
+			break BranchM;
+		}
 	}
 
 	private static void UserManage(Connection conn, String Admin_ID) throws Exception {
+		sc = new Scanner(System.in);
+		Statement stmt = null;
+		ResultSet rs = null;
+		UserM: while (true) {
+
+		}
 		// TODO
 	}
 
 	private static void SavingManage(Connection conn, String Admin_ID) throws Exception {
+		sc = new Scanner(System.in);
+		Statement stmt = null;
+		ResultSet rs = null;
+		SavingM: while (true) {
+
+		}
 		// TODO
 	}
 
 	private static void LoanManage(Connection conn, String Admin_ID) throws Exception {
+		sc = new Scanner(System.in);
+		Statement stmt = null;
+		ResultSet rs = null;
+		LoanM: while (true) {
+
+		}
 		// TODO
 	}
 
 	private static void LoanProductManage(Connection conn, String Admin_ID) throws Exception {
+		sc = new Scanner(System.in);
+		Statement stmt = null;
+		ResultSet rs = null;
+		LoanProductM: while (true) {
+
+		}
 		// TODO
 	}
 
 	private static void SavingProductManage(Connection conn, String Admin_ID) throws Exception {
+		sc = new Scanner(System.in);
+		Statement stmt = null;
+		ResultSet rs = null;
+		SavingProductM: while (true) {
+
+		}
 		// TODO
 	}
 
@@ -574,8 +683,6 @@ public class PJ_Bank {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		sql = "SELECT Admin_ID, Password FROM Admin";
-
 		stmt = conn.createStatement();
 		while (true) {
 			System.out.print("Admin ID: ");
@@ -583,7 +690,7 @@ public class PJ_Bank {
 			System.out.print("Password: ");
 			password = sc.next();
 
-			sql += " WHERE Admin_ID='" + adminID + "'";
+			sql = "SELECT Admin_ID, Password FROM Admin WHERE Admin_ID='" + adminID + "'";
 			// System.out.println("sql statement is: " + sql);
 
 			rs = stmt.executeQuery(sql);
@@ -609,8 +716,8 @@ public class PJ_Bank {
 					}
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
+				// System.out.println(e.getMessage());
+				// e.printStackTrace();
 				while (true) {
 					System.out.println("\n.비밀번호가 틀렸거나, 존재하지 않는 관리자 ID 입니다.");
 					System.out.println("1.비밀번호 재입력");
