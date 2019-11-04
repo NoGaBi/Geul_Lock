@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
         txt3.startAnimation(animAlpha);
 
 
-        ConstraintLayout background = (ConstraintLayout) findViewById(R.id.StartBackground);
+        ConstraintLayout background = (ConstraintLayout) findViewById(R.id.SplashBackground);
 
         background.setOnClickListener(new View.OnClickListener() {
             @Override
